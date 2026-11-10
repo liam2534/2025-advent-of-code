@@ -12,6 +12,7 @@ Todo:
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -29,16 +30,19 @@ func main() {
 	lines = organize(string(input))
 
 	//for line in lines
-		//for char in line
-	for i:=0; i < len(lines), i++{
-		for j :=0 < len(lines[i]); j++{
+	//for char in line
+	for currentLine := 0; currentLine < len(lines); currentLine++ {
+		for currentChar := 0; currentChar < len(lines[currentLine]); currentChar++ {
 			//make if statement to check if current char is roll of paper
-				//if yes, then run determine type and determine adjacent, counter also should update
+			//if yes, then run determine type and determine adjacent, counter also should update
+			thisChar := lines[currentLine][currentChar]
+			if thisChar == '@' {
+				determineAdj(determineType(lines, currentLine, currentChar), counter, lines, currentLine, currentChar)
+			}
 		}
 	}
+	fmt.Println(counter)
 }
-
-
 
 // breaks down input and turns it into a slice
 // returns a slice of strings, where each element is a line from the input string.
@@ -47,6 +51,9 @@ func organize(input string) []string {
 }
 
 // determines the positional type of the character being interpreted
+// lines = slice of string that is the input in list form
+// currentLine = int representing which line we're on in lines[]
+// currentChar = int representing which char in currentLine is being analyzed
 func determineType(lines []string, currentLine int, currentChar int) string {
 	switch {
 	case (currentLine == 0 && (currentChar == 0 || currentChar == len(lines[currentLine])-1)) ||
