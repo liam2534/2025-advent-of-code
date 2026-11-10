@@ -17,17 +17,28 @@ import (
 	"strings"
 )
 
+var counter int = 0 //amt of accessible papers
+var lines []string
+var charType = []string{"corner", "topLine", "botLine", "leftCol", "rightCol", "middle"}
+
 func main() {
 	input, err := os.ReadFile("input")
 	if err != nil {
 		log.Fatal(err)
 	}
 	lines = organize(string(input))
+
+	//for line in lines
+		//for char in line
+	for i:=0; i < len(lines), i++{
+		for j :=0 < len(lines[i]); j++{
+			//make if statement to check if current char is roll of paper
+				//if yes, then run determine type and determine adjacent, counter also should update
+		}
+	}
 }
 
-var counter int = 0 //amt of accessible papers
-var lines []string
-var charType = []string{"corner", "topLine", "botLine", "leftCol", "rightCol", "middle"}
+
 
 // breaks down input and turns it into a slice
 // returns a slice of strings, where each element is a line from the input string.
@@ -55,6 +66,7 @@ func determineType(lines []string, currentLine int, currentChar int) string {
 }
 
 // determines and counts how many adjacent rolls of paper there are
+// counter = int representing the number of retrievable paper objects
 // position = type of char being analyzed depending on where it is
 // adjacent = number of adjacent paper chars
 // lines = slice containing the broken test input
