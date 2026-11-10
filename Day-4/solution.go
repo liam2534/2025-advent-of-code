@@ -15,23 +15,109 @@ import (
 	"strings"
 )
 
-var final int = 0
-var lines []string
-var charType = []string{"corner", "topRail", "botRail", "leftCol", "rightCol", "middle"}
+func main() {
 
-// breaks down input and turns it into a
+}
+
+var counter int = 0 //amt of accessible papers
+var lines []string
+var charType = []string{"corner", "topLine", "botLine", "leftCol", "rightCol", "middle"}
+
+// breaks down input and turns it into a slice
 func organize(input string) {
 	lines = strings.Split(strings.TrimSpace(input), "\n")
 }
 
+// determines the positional type of the character being interpreted
 func determineType(lines []string, currentLine int, currentChar int) string {
 	switch {
-	case currentLine == 0 && currentChar == 0: //topLeft Corner
+	case (currentLine == 0 && (currentChar == 0 || currentChar == len(lines[currentLine])-1)) ||
+		(currentLine == len(lines)-1 && (currentChar == 0 || currentChar == len(lines[currentLine])-1)): //Should cover corner cases. I know this looks bad
 		return charType[0]
-	default:
+	case currentLine == 0 && (currentChar != 0 || currentChar != len(lines[currentLine])): //top line
+		return charType[1]
+	case currentLine == len(lines)-1 && (currentChar != 0 || currentChar != len(lines[currentLine])): //botLine
+		return charType[2]
+	case currentChar == 0: //left column
+		return charType[3]
+	case currentChar == len(lines[currentLine])-1: //right colummn
+		return charType[4]
+	default: //default is middle
 		return charType[5]
 	}
+}
 
+// determines and counts how many adjacent rolls of paper there are
+func determineAdj(position string, counter int, lines []string,
+	currentLine int, currentChar int) {
+	adjacent := 0 //counts for adjacent rolls of paper
+	switch {
+	case position == charType[0]: //corner
+		counter++
+	case position == charType[1]: //topline
+		checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
+		checkThreeOnSame(adjacent, lines, currentLine+1, currentChar)
+	case position == charType[2]: //bot line
+		checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
+		checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
+	case position == charType[3]: //left column
+		//iterate i, i+1 for above and below
+		checkSameAndAfter(adjacent, lines, currentLine, currentChar)
+		//iterate i + 1 on same
+		checkAfter(adjacent, lines, currentLine, currentChar)
+	}
+
+	if adjacent < 4 {
+		counter++
+	}
+}
+
+/*
+The following functions use these parameters:
+
+adjacent = number of adjacent paper chars
+lines = slice containing the broken test input
+currentLine = int representing which line we're on in lines[]
+currentChar = int representing which char in currentLine is being analyzed
+
+*/
+
+func checkThreeOnSame(adjacent int, lines []string, currentLine int, currentChar int) {
+	for i := currentChar - 1; i < currentChar+3; i++ {
+		if lines[currentLine][i] == '@' {
+			adjacent++
+		}
+	}
+}
+
+func checkBeforeAndAfter(adjacent int, lines []string, currentLine int, currentChar int) {
+	for i := currentChar - 1; i < currentChar+3; i += 2 {
+		if lines[currentLine][i] == '@' {
+			adjacent++
+		}
+	}
+}
+
+func checkSameAndAfter(adjacent int, lines []string, currentLine int, currentChar int) {
+	for i := currentChar; i < currentChar+2; i++ {
+		if lines[currentLine][i] == '@' {
+			adjacent++
+		}
+	}
+}
+
+func checkSameAndBefore(adjacent int, lines []string, currentLine int, currentChar int) {
+	for i := currentChar - 1; i < currentChar+1; i++ {
+		if lines[currentLine][i] == '@' {
+			adjacent++
+		}
+	}
+}
+
+func checkAfter(adjacent int, lines []string, currentLine int, currentChar int) {
+	if lines[currentLine][currentChar+1] == '@' {
+		adjacent++
+	}
 }
 
 /*
