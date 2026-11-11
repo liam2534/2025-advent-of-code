@@ -93,12 +93,12 @@ func determineAdj(position string, counter int, lines []string,
 		adjacent = checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
 		adjacent = checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
 	case position == charType[3]: //left column
-		//iterate i, i+1 for above and below
-		adjacent = checkSameAndAfter(adjacent, lines, currentLine, currentChar)
-		//iterate i + 1 on same
-		adjacent = checkAfter(adjacent, lines, currentLine, currentChar)
+		adjacent = checkSameAndAfter(adjacent, lines, currentLine-1, currentChar)//iterate i, i+1 for above and below
+		adjacent = checkSameAndAfter(adjacent, lines, currentLine+1, currentChar)
+		adjacent = checkAfter(adjacent, lines, currentLine, currentChar) //iterate i + 1 on same
 	case position == charType[4]: //right column
-		adjacent = checkSameAndBefore(adjacent, lines, currentLine, currentChar)
+		adjacent = checkSameAndBefore(adjacent, lines, currentLine-1, currentChar) // checks above line
+		adjacent = checkSameAndBefore(adjacent, lines, currentLine+1, currentChar) // checks below line
 		adjacent = checkBefore(adjacent, lines, currentLine, currentChar)
 	default: //for middle, middle cases
 		adjacent = checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
