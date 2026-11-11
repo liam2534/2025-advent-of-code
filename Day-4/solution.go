@@ -37,10 +37,11 @@ func main() {
 			//if yes, then run determine type and determine adjacent, counter also should update
 			thisChar := lines[currentLine][currentChar]
 			if thisChar == '@' {
-				determineAdj(determineType(lines, currentLine, currentChar), counter, lines, currentLine, currentChar)
+				counter = determineAdj(determineType(lines, currentLine, currentChar), counter, lines, currentLine, currentChar)
 			}
 		}
 	}
+	fmt.Println("Test")
 	fmt.Println(counter)
 }
 
@@ -80,34 +81,35 @@ func determineType(lines []string, currentLine int, currentChar int) string {
 // currentLine = int representing which line we're on in lines[]
 // currentChar = int representing which char in currentLine is being analyzed
 func determineAdj(position string, counter int, lines []string,
-	currentLine int, currentChar int) {
+	currentLine int, currentChar int) int {
 	adjacent := 0 //counts for adjacent rolls of paper
 	switch {
 	case position == charType[0]: //corner
 		counter++
 	case position == charType[1]: //topline
-		checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
-		checkThreeOnSame(adjacent, lines, currentLine+1, currentChar)
+		adjacent = checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
+		adjacent = checkThreeOnSame(adjacent, lines, currentLine+1, currentChar)
 	case position == charType[2]: //bot line
-		checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
-		checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
+		adjacent = checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
+		adjacent = checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
 	case position == charType[3]: //left column
 		//iterate i, i+1 for above and below
-		checkSameAndAfter(adjacent, lines, currentLine, currentChar)
+		adjacent = checkSameAndAfter(adjacent, lines, currentLine, currentChar)
 		//iterate i + 1 on same
-		checkAfter(adjacent, lines, currentLine, currentChar)
+		adjacent = checkAfter(adjacent, lines, currentLine, currentChar)
 	case position == charType[4]: //right column
-		checkSameAndBefore(adjacent, lines, currentLine, currentChar)
-		checkBefore(adjacent, lines, currentLine, currentChar)
+		adjacent = checkSameAndBefore(adjacent, lines, currentLine, currentChar)
+		adjacent = checkBefore(adjacent, lines, currentLine, currentChar)
 	default: //for middle, middle cases
-		checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
-		checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
-		checkThreeOnSame(adjacent, lines, currentLine+1, currentChar)
+		adjacent = checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
+		adjacent = checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
+		adjacent = checkThreeOnSame(adjacent, lines, currentLine+1, currentChar)
 	}
 
 	if adjacent < 4 {
 		counter++
 	}
+	return counter
 }
 
 /*
@@ -120,48 +122,54 @@ currentChar = int representing which char in currentLine is being analyzed
 
 */
 
-func checkThreeOnSame(adjacent int, lines []string, currentLine int, currentChar int) {
-	for i := currentChar - 1; i < currentChar+3; i++ {
+func checkThreeOnSame(adjacent int, lines []string, currentLine int, currentChar int) int {
+	for i := currentChar - 1; i < currentChar+2; i++ {
 		if lines[currentLine][i] == '@' {
 			adjacent++
 		}
 	}
+	return adjacent
 }
 
-func checkBeforeAndAfter(adjacent int, lines []string, currentLine int, currentChar int) {
-	for i := currentChar - 1; i < currentChar+3; i += 2 {
+func checkBeforeAndAfter(adjacent int, lines []string, currentLine int, currentChar int) int {
+	for i := currentChar - 1; i < currentChar+2; i += 2 {
 		if lines[currentLine][i] == '@' {
 			adjacent++
 		}
 	}
+	return adjacent
 }
 
-func checkSameAndAfter(adjacent int, lines []string, currentLine int, currentChar int) {
+func checkSameAndAfter(adjacent int, lines []string, currentLine int, currentChar int) int {
 	for i := currentChar; i < currentChar+2; i++ {
 		if lines[currentLine][i] == '@' {
 			adjacent++
 		}
 	}
+	return adjacent
 }
 
-func checkSameAndBefore(adjacent int, lines []string, currentLine int, currentChar int) {
+func checkSameAndBefore(adjacent int, lines []string, currentLine int, currentChar int) int {
 	for i := currentChar - 1; i < currentChar+1; i++ {
 		if lines[currentLine][i] == '@' {
 			adjacent++
 		}
 	}
+	return adjacent
 }
 
-func checkAfter(adjacent int, lines []string, currentLine int, currentChar int) {
+func checkAfter(adjacent int, lines []string, currentLine int, currentChar int) int {
 	if lines[currentLine][currentChar+1] == '@' {
 		adjacent++
 	}
+	return adjacent
 }
 
-func checkBefore(adjacent int, lines []string, currentLine int, currentChar int) {
+func checkBefore(adjacent int, lines []string, currentLine int, currentChar int) int {
 	if lines[currentLine][currentChar-1] == '@' {
 		adjacent++
 	}
+	return adjacent
 }
 
 /*
