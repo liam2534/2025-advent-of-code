@@ -23,7 +23,7 @@ var lines []string
 var charType = []string{"corner", "topLine", "botLine", "leftCol", "rightCol", "middle"}
 
 func main() {
-	input, err := os.ReadFile("input")
+	input, err := os.ReadFile("input-simple") //change this to input when testing the actual case.
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -93,7 +93,7 @@ func determineAdj(position string, counter int, lines []string,
 		adjacent = checkThreeOnSame(adjacent, lines, currentLine-1, currentChar)
 		adjacent = checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
 	case position == charType[3]: //left column
-		adjacent = checkSameAndAfter(adjacent, lines, currentLine-1, currentChar)//iterate i, i+1 for above and below
+		adjacent = checkSameAndAfter(adjacent, lines, currentLine-1, currentChar) //iterate i, i+1 for above and below
 		adjacent = checkSameAndAfter(adjacent, lines, currentLine+1, currentChar)
 		adjacent = checkAfter(adjacent, lines, currentLine, currentChar) //iterate i + 1 on same
 	case position == charType[4]: //right column
