@@ -23,7 +23,7 @@ var lines []string
 var charType = []string{"corner", "topLine", "botLine", "leftCol", "rightCol", "middle"}
 
 func main() {
-	input, err := os.ReadFile("input-simple") //change this to input when testing the actual case.
+	input, err := os.ReadFile("input") //change this to input when testing the actual case.
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,12 +80,16 @@ func determineType(lines []string, currentLine int, currentChar int) string {
 // lines = slice containing the broken test input
 // currentLine = int representing which line we're on in lines[]
 // currentChar = int representing which char in currentLine is being analyzed
+// returns int = number of retrievable papers, should only increment by 1 every time this is called.
 func determineAdj(position string, counter int, lines []string,
 	currentLine int, currentChar int) int {
 	adjacent := 0 //counts for adjacent rolls of paper
 	switch {
+	// The below case doesn't need to exist. If it's a corner, it's impossible
+	// for there to be >3 adjacent papers.
+	//When I comment out this case, the program breaks...
 	case position == charType[0]: //corner
-		counter++
+		// counter++
 	case position == charType[1]: //topline
 		adjacent = checkBeforeAndAfter(adjacent, lines, currentLine, currentChar)
 		adjacent = checkThreeOnSame(adjacent, lines, currentLine+1, currentChar)
@@ -119,6 +123,8 @@ adjacent = number of adjacent paper chars
 lines = slice containing the broken test input
 currentLine = int representing which line we're on in lines[]
 currentChar = int representing which char in currentLine is being analyzed
+
+returns int = # of adjacent rolls of paper
 
 */
 
